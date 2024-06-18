@@ -24,4 +24,32 @@ public class Employee {
         return "Employee Health Test Passed.";
     }
 
+    @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        try {
+            validateEmployee(employeeDTO);
+            if (employeeService.existsByEmployeeCode(employeeDTO.getEmployeeCode())) {
+                logger.info("Exists Employee.");
+                return ResponseEntity.badRequest().body("This employee already exists.");
+            }
+            employeeService.saveEmployee(employeeDTO);
+            logger.info(employeeDTO.getEmployeeCode()+" : Employee saved.");
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    private void validateEmployee(EmployeeDTO employeeDTO) {
+        if (!Pattern.compile("^[E]-\\d{4}$").matcher(employeeDTO.getEmployeeCode()).matches()) {
+            throw new RuntimeException("Invalid Employee Code.");
+        }
+        if (!Pattern.compile("^[A-Za-z\\s]{3,}$").matcher(employeeDTO.getEmployeeName()).matches()) {
+            throw new RuntimeException("Invalid Employee Name.");
+        }
+        if (!Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$").matcher(employeeDTO.getEmployeeEmail()).matches()) {
+            throw new RuntimeException("Invalid Email.");
+        }
+        logger.info("Employee validated.");
+    }
 }
