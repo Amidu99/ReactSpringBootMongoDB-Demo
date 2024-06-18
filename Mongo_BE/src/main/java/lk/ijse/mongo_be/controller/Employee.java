@@ -18,5 +18,10 @@ public class Employee {
     final static Logger logger = LoggerFactory.getLogger(Employee.class);
     private final EmployeeService employeeService;
 
+    @GetMapping("/health")
+    public String healthTest(){
+        logger.info("Employee Health Test Passed.");
+        return "Employee Health Test Passed.";
+    }
 
 }
