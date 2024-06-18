@@ -44,7 +44,7 @@ public class Employee {
     public ResponseEntity<?> getOneEmployee(@PathVariable String employeeCode){
         boolean isExists = employeeService.existsByEmployeeCode(employeeCode);
         if (!isExists){
-            logger.info("Not Exists Employee.");
+            logger.info(employeeCode+" : is not Exists Employee.");
             return ResponseEntity.noContent().build();
         }
         EmployeeDTO employeeDTO = employeeService.getEmployeeByEmployeeCode(employeeCode);
@@ -75,7 +75,7 @@ public class Employee {
             validateEmployee(employeeDTO);
             boolean isExists = employeeService.existsByEmployeeCode(employeeDTO.getEmployeeCode());
             if (!isExists) {
-                logger.info("Not Exists Employee.");
+                logger.info(employeeDTO.getEmployeeCode()+" : is not Exists Employee.");
                 return ResponseEntity.noContent().build();
             }
             employeeService.updateEmployee(employeeDTO);
@@ -90,7 +90,7 @@ public class Employee {
     public ResponseEntity<?> deleteEmployee(@PathVariable String employeeCode){
         boolean isExists = employeeService.existsByEmployeeCode(employeeCode);
         if (!isExists){
-            logger.info("Not Exists Employee.");
+            logger.info(employeeCode+" : is not Exists Employee.");
             return ResponseEntity.noContent().build();
         }
         employeeService.deleteEmployee(employeeCode);
